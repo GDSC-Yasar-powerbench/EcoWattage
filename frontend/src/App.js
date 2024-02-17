@@ -2,24 +2,28 @@ import './App.css';
 
 import Navbar from './Navbar';
 import CodeEditor from './CodeEditor'
-import Results from './Results'
+import Benchmark from './Benchmark'
 
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 
+import { useState } from 'react';
+
 function App() {
+  const [code, setCode] = useState("")
+
   return (
-    <Box className="App" sx={{display: 'flex', flexDirection: 'column'}}>
-      <Box sx={{flexShrink: 1}}>
+    <Box className="App" sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flexShrink: 1 }}>
         <Navbar></Navbar>
       </Box>
-      <Box sx={{flexGrow: 1, display: 'flex'}}>
+      <Box sx={{ flexGrow: 1, display: 'flex' }}>
         <Grid container>
           <Grid item xs={6}>
-            <CodeEditor></CodeEditor>
+            <CodeEditor setCode={setCode}></CodeEditor>
           </Grid>
           <Grid item xs={6}>
-            <Results></Results>
+            <Benchmark code={code}></Benchmark>
           </Grid>
         </Grid>
       </Box>

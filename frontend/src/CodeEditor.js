@@ -8,15 +8,18 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 const languages = [
     'c',
     'cpp'
 ]
 
-function CodeEditor() {
+function CodeEditor({setCode}) {
     const [language, setLanguage] = useState(languages[0])
+
+    const editorRef = useRef(null)
+    const codeEncoded = () => btoa(editorRef.current ? editorRef.current.getValue() : "")
 
     return (
         <Box component='form' className='code-form' noValidate>
@@ -30,8 +33,14 @@ function CodeEditor() {
                     </Select>
                 </FormControl>
             </Box>
-
-            <Editor language={language} defaultValue='// Enter code here' width='100%' height='100%'></Editor>
+            <Editor
+                onMount={(editor) => editorRef.current = editor}
+                onChange={() => setCode(codeEncoded())}
+                language={language}
+                defaultValue='// Enter code here'
+                width='100%'
+                height='100%'>
+            </Editor>
         </Box>
     )
 }
