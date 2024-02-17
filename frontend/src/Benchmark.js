@@ -8,24 +8,42 @@ import Results from './Results'
 
 import { useState } from 'react'
 
-function Benchmark() {
+import { GetBenchmark } from './API'
+
+function Benchmark({ code }) {
     const [watts, setWatts] = useState(0)
     const [loading, setLoading] = useState(false)
+    const [results, setResults] = useState(null)
+    const [errors, setErrors] = useState(null)
 
-    const results = [
-        {
-            id: "compilation",
-            value: 0.0006066317028469509
-        },
-        {
-            id: "execution",
-            value: 2.1651056077745227e-05
+    const doBenchmark = async () => {
+        try {
+            setLoading(true)
+            const response = await GetBenchmark(watts, 'c', code)
+            const data = await response.json()
+            if (!response.ok) {
+                setResults(null)
+                setErrors(data["stderr"])
+                return
+            }
+            setErrors(null)
+            setResults([
+                {
+                    id: "compilation",
+                    value: data["compile_power"]
+                },
+                {
+                    id: "execution",
+                    value: data["exec_power"]
+                }
+            ])
+        } catch (err) {
+            console.error('err', err)
+            setResults(null)
+            setErrors(err)
+        } finally {
+            setLoading(false)
         }
-    ]
-
-    const getBenchmark = () => {
-        setLoading(true)
-        setTimeout(() => setLoading(false), 2000)
     }
 
     return (
@@ -40,8 +58,8 @@ function Benchmark() {
                 fullWidth
                 onChange={(event) => setWatts(event.target.value)}
             />
-            <Button type='submit' fullWidth variant='contained' onClick={getBenchmark}>Benchmark</Button>
-            <Results loading={loading} results={results} />
+            <Button type='submit' fullWidth variant='contained' onClick={doBenchmark}>Benchmark</Button>
+            <Results loading={loading} results={results} errors={errors} />
         </Box>
     )
 }

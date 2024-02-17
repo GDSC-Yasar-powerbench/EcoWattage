@@ -4,9 +4,13 @@ import Typography from '@mui/material/Typography';
 
 import { ResponsivePie } from '@nivo/pie'
 
-function Results({ loading, results }) {
+function Results({ loading, results, errors }) {
     if (loading) {
         return <CircularProgress />
+    }
+
+    if (errors) {
+        return <Typography color='error'>{errors}</Typography>
     }
 
     if (!results) return ""
@@ -17,6 +21,7 @@ function Results({ loading, results }) {
                 data={results}
                 margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                 innerRadius={0.5}
+                colors={{ scheme: 'paired' }}
             />
         </Box>
         <Typography component='div'>
