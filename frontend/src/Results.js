@@ -1,4 +1,4 @@
-import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography';
 
@@ -6,7 +6,7 @@ import { ResponsivePie } from '@nivo/pie'
 
 function Results({ loading, results, errors }) {
     if (loading) {
-        return <CircularProgress />
+        return <LinearProgress />
     }
 
     if (errors) {
