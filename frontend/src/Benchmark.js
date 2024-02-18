@@ -9,9 +9,12 @@ import Button from '@mui/material/Button'
 
 import Results from './Results'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { GetBenchmark } from './API'
+
+import { firestore } from './FirebaseAPI'
+import { collection, getDocs } from 'firebase/firestore'
 
 function Benchmark({ code }) {
     const [watts, setWatts] = useState(0)
@@ -19,14 +22,14 @@ function Benchmark({ code }) {
     const [loading, setLoading] = useState(false)
     const [results, setResults] = useState(null)
     const [errors, setErrors] = useState(null)
-    const [cpus, setCPUs] = useState([
-        {
-            label: 'AMD Ryzen 5 3600X',
-            power: 81.6
-        }
-    ])
+    const [cpus, setCPUs] = useState([])
 
+    const getCPUs = async () => {
+        const snapshot = await getDocs(collection(firestore, "cpu"))
+        setCPUs(snapshot.docs.map((document) => document.data()))
+    }
 
+    useEffect(() => { getCPUs() }, [])
 
     const doBenchmark = async () => {
         try {
@@ -85,7 +88,7 @@ function Benchmark({ code }) {
                 value={watts}
                 disabled={!advanced}
             />
-            <Button type='submit' fullWidth variant='contained' onClick={doBenchmark}>Benchmark</Button>
+            <Button disabled={watts === 0 || !watts} type='submit' fullWidth variant='contained' onClick={doBenchmark}>Benchmark</Button>
             <Results loading={loading} results={results} errors={errors} />
         </Box>
     )
