@@ -39,8 +39,8 @@ The backend is built with flask and python
 ```
 cd backend
 python3 -m venv .venv
-source ./venv/bin/activate
-pip install -r requirements. txt
+source .venv/bin/activate
+pip install -r requirements.txt
 flask run
 ```
 The dev server for the backend will begin running at http://localhost:5000

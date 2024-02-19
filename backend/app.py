@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 import base64
 import subprocess
 import time
+from pathlib import Path
 
 app = Flask(__name__)
 cors = CORS(app, origins=["http://localhost:3000"])
@@ -20,6 +21,7 @@ def benchmark():
         language = json["language"]
         print("Benchmarking...")
         print(f"- Language: {language}")
+        Path("./tmp").mkdir(parents=True, exist_ok=True)
         filename = f"./tmp/main.{language}"
         print(f"- Temporary source: {filename}")
         with open(filename, 'wb') as tmpfile:
